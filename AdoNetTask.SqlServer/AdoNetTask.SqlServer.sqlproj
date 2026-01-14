@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{9556848a-3002-447a-b098-fb34f12d7072}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -59,6 +59,7 @@
     <Folder Include="dbo" />
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Stored procedures" />
+    <Folder Include="PublishLocations" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Product.sql" />
@@ -67,6 +68,6 @@
     <Build Include="dbo\Stored procedures\spOrders_Bulk_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
-    <RefactorLog Include="AdoNetTask.SqlServer.refactorlog" />
+    <None Include="PublishLocations\LocalInventoryDB.publish.xml" />
   </ItemGroup>
 </Project>
