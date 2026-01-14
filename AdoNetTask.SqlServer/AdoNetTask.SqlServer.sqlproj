@@ -63,7 +63,8 @@
   <ItemGroup>
     <Build Include="dbo\Tables\Product.sql" />
     <Build Include="dbo\Tables\Order.sql" />
-    <Build Include="dbo\Stored procedures\spProduct_Insert.sql" />
+    <Build Include="dbo\Stored procedures\spOrders_Filter.sql" />
+    <Build Include="dbo\Stored procedures\spOrders_Bulk_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="AdoNetTask.SqlServer.refactorlog" />

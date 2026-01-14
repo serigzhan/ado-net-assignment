@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spProduct_Insert]
+﻿CREATE PROCEDURE [dbo].[spOrders_Filter]
 	@param1 int = 0,
 	@param2 int
 AS

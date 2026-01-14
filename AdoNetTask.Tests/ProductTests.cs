@@ -1,6 +1,6 @@
 ﻿namespace AdoNetTask.Tests;
 
-public class Tests
+public class ProductTests
 {
     [SetUp]
     public void Setup()
