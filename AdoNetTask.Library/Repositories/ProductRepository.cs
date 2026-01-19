@@ -2,9 +2,10 @@
 
 public class ProductRepository(string connectionString) : IProductRepository
 {
-    string ConnectionString { get; set; } = connectionString;
 
-    public void Add(Product product)
+    private readonly string _connectionString = connectionString;
+
+    public Product Add(Product product)
     {
         throw new NotImplementedException();
     }
@@ -24,12 +25,7 @@ public class ProductRepository(string connectionString) : IProductRepository
         throw new NotImplementedException();
     }
 
-    public Product GetByName(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Update(Product product)
+    public Product Update(Product product)
     {
         throw new NotImplementedException();
     }

@@ -3,7 +3,7 @@
 public class OrderRepository(string connectionString) : IOrderRepository
 {
 
-    public string ConnectionString { get; set; } = connectionString;
+    private readonly string _connectionString = connectionString;
 
     public void Add(Order order)
     {

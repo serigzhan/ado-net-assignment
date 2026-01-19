@@ -3,11 +3,10 @@
 public interface IProductRepository
 {
 
-    void Add(Product product);
-    void Update(Product product);
+    Product Add(Product product);
+    Product Update(Product product);
     void Delete(int id);
     Product GetById(int id);
-    Product GetByName(string name);
     IEnumerable<Product> GetAll();
 
 }

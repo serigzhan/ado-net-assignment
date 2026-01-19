@@ -22,13 +22,10 @@ public class ProductTests
         using (var scope = new TransactionScope())
         {
 
-            var product = new Product { Name = "Product A", Weight = 1.5m  };
+            var product = _productRepository.Add(new Product { Name = "Product A", Weight = 1.5m });
 
-            _productRepository.Add(product);
-            var result = _productRepository.GetByName("Product A");
-
-            Assert.That(result, Is.Not.Null);
-            Assert.Equals(1.5m, result.Weight);
+            Assert.That(product, Is.Not.Null);
+            Assert.Equals(1.5m, product.Weight);
 
         }
     }
@@ -44,9 +41,7 @@ public class ProductTests
 
             product.Name = "New Product Name";
             product.Height = 45.5m;
-            _productRepository.Update(product);
-
-            var updatedProduct = _productRepository.GetById(product.Id);
+            var updatedProduct = _productRepository.Update(product);
 
             Assert.Equals(updatedProduct.Name, "New Product Name");
             Assert.Equals(updatedProduct.Height, 45.5m);
@@ -78,7 +73,6 @@ public class ProductTests
     private Product CreateTestProduct()
     {
         var p = new Product { Name = "Test_" + Guid.NewGuid(), Weight = 1.0m };
-        _productRepository.Add(p);
-        return _productRepository.GetByName(p.Name);
+        return _productRepository.Add(p);
     }
 }
