@@ -1,6 +1,20 @@
 ﻿CREATE PROCEDURE [dbo].[spOrders_Filter]
-	@param1 int = 0,
-	@param2 int
+	@Month INT = NULL,
+	@Year INT = NULL,
+	@Status NVARCHAR(20) = NULL,
+	@ProductId INT = NULL
 AS
-	SELECT @param1, @param2
-RETURN 0
+BEGIN
+	SELECT
+		o.[Id],
+		o.[Status],
+		o.[CreatedDate],
+		o.[UpdatedDate],
+		o.[ProductId]
+	FROM [dbo].[Order] o
+	WHERE
+		(@Month IS NULL OR MONTH(o.[CreatedDate]) = @Month)
+		AND (@Year IS NULL OR YEAR(o.[CreatedDate]) = @Year)
+		AND (@Status IS NULL OR o.[Status] = @Status)
+		AND (@ProductId IS NULL OR o.[ProductId] = @ProductId)
+END

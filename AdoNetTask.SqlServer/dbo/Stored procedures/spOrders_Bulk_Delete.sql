@@ -1,6 +1,14 @@
 ﻿CREATE PROCEDURE [dbo].[spOrders_Bulk_Delete]
-	@param1 int = 0,
-	@param2 int
+	@Month INT = NULL,
+	@Year INT = NULL,
+	@Status NVARCHAR(20) = NULL,
+	@ProductId INT = NULL
 AS
-	SELECT @param1, @param2
-RETURN 0
+BEGIN
+	DELETE FROM [dbo].[Order]
+	WHERE
+		(@Month IS NULL OR MONTH([CreatedDate]) = @Month)
+		AND (@Year IS NULL OR YEAR([CreatedDate]) = @Year)
+		AND (@Status IS NULL OR [Status] = @Status)
+		AND (@ProductId IS NULL OR [ProductId] = @ProductId)
+END

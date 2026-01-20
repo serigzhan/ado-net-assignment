@@ -25,7 +25,7 @@ public class ProductTests
             var product = _productRepository.Add(new Product { Name = "Product A", Weight = 1.5m });
 
             Assert.That(product, Is.Not.Null);
-            Assert.Equals(1.5m, product.Weight);
+            Assert.That(product.Weight, Is.EqualTo(1.5m));
 
         }
     }
@@ -43,8 +43,8 @@ public class ProductTests
             product.Height = 45.5m;
             var updatedProduct = _productRepository.Update(product);
 
-            Assert.Equals(updatedProduct.Name, "New Product Name");
-            Assert.Equals(updatedProduct.Height, 45.5m);
+            Assert.That(updatedProduct.Name, Is.EqualTo("New Product Name"));
+            Assert.That(updatedProduct.Height, Is.EqualTo(45.5m));
 
         }
 
@@ -64,10 +64,44 @@ public class ProductTests
             _productRepository.Delete(id);
 
             var products = _productRepository.GetAll();
-            Assert.Equals(products.Count(), 1);
+            Assert.That(products.Count(), Is.EqualTo(1));
 
         }
 
+    }
+
+    [Test]
+    public void GetById_ShouldReturnProduct()
+    {
+        using (var scope = new TransactionScope())
+        {
+            var product = CreateTestProduct();
+
+            var result = _productRepository.GetById(product.Id);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(product.Id));
+            Assert.That(result.Name, Is.EqualTo(product.Name));
+            Assert.That(result.Weight, Is.EqualTo(product.Weight));
+        }
+    }
+
+    [Test]
+    public void GetAll_ShouldReturnAllProducts()
+    {
+        using (var scope = new TransactionScope())
+        {
+            var product1 = CreateTestProduct();
+            var product2 = CreateTestProduct();
+            var product3 = CreateTestProduct();
+
+            var products = _productRepository.GetAll();
+
+            Assert.That(products.Count(), Is.EqualTo(3));
+            Assert.That(products.Any(p => p.Id == product1.Id), Is.True);
+            Assert.That(products.Any(p => p.Id == product2.Id), Is.True);
+            Assert.That(products.Any(p => p.Id == product3.Id), Is.True);
+        }
     }
 
     private Product CreateTestProduct()
