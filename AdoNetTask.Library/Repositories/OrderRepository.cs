@@ -107,18 +107,6 @@ public class OrderRepository(string connectionString) : IOrderRepository
         }
     }
 
-    private static Order MapToOrder(SqlDataReader reader)
-    {
-        return new Order
-        {
-            Id = (int)reader["Id"],
-            Status = Enum.Parse<OrderStatus>((string)reader["Status"]),
-            CreatedDate = (DateTime)reader["CreatedDate"],
-            UpdatedDate = (DateTime)reader["UpdatedDate"],
-            ProductId = (int)reader["ProductId"]
-        };
-    }
-
     private static Order MapToOrder(DataRow row)
     {
         return new Order
