@@ -73,7 +73,7 @@ public class ProductRepository(string connectionString) : IProductRepository
         command.ExecuteNonQuery();
     }
 
-    public Product GetById(int id)
+    public Product? GetById(int id)
     {
         const string sql = "SELECT Id, Name, Description, Weight, Height, Width, Length FROM Product WHERE Id = @Id";
 
