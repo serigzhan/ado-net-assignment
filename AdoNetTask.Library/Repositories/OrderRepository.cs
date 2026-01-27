@@ -84,16 +84,27 @@ public class OrderRepository(string connectionString) : IOrderRepository
     public void DeleteOrdersBulk(int? month, int? year, OrderStatus? status, int? productId)
     {
         using var connection = new SqlConnection(_connectionString);
-        using var command = new SqlCommand("spOrders_Bulk_Delete", connection);
-
-        command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@Month", (object?)month ?? DBNull.Value);
-        command.Parameters.AddWithValue("@Year", (object?)year ?? DBNull.Value);
-        command.Parameters.AddWithValue("@Status", status.HasValue ? status.Value.ToString() : DBNull.Value);
-        command.Parameters.AddWithValue("@ProductId", (object?)productId ?? DBNull.Value);
-
         connection.Open();
-        command.ExecuteNonQuery();
+
+        using var transaction = connection.BeginTransaction();
+        try
+        {
+            using var command = new SqlCommand("spOrders_Bulk_Delete", connection, transaction);
+
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@Month", (object?)month ?? DBNull.Value);
+            command.Parameters.AddWithValue("@Year", (object?)year ?? DBNull.Value);
+            command.Parameters.AddWithValue("@Status", status.HasValue ? status.Value.ToString() : DBNull.Value);
+            command.Parameters.AddWithValue("@ProductId", (object?)productId ?? DBNull.Value);
+
+            command.ExecuteNonQuery();
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 
     private static Order MapToOrder(SqlDataReader reader)
