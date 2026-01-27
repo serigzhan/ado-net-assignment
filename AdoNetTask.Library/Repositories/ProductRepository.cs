@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace AdoNetTask.Library;
 
@@ -96,20 +97,13 @@ public class ProductRepository(string connectionString) : IProductRepository
     {
         const string sql = "SELECT Id, Name, Description, Weight, Height, Width, Length FROM Product";
 
-        var products = new List<Product>();
-
         using var connection = new SqlConnection(_connectionString);
-        using var command = new SqlCommand(sql, connection);
+        using var adapter = new SqlDataAdapter(sql, connection);
 
-        connection.Open();
-        using var reader = command.ExecuteReader();
+        var dataTable = new DataTable();
+        adapter.Fill(dataTable);
 
-        while (reader.Read())
-        {
-            products.Add(MapToProduct(reader));
-        }
-
-        return products;
+        return dataTable.AsEnumerable().Select(MapToProduct).ToList();
     }
 
     private static Product MapToProduct(SqlDataReader reader)
@@ -123,6 +117,20 @@ public class ProductRepository(string connectionString) : IProductRepository
             Height = reader["Height"] as decimal?,
             Width = reader["Width"] as decimal?,
             Length = reader["Length"] as decimal?
+        };
+    }
+
+    private static Product MapToProduct(DataRow row)
+    {
+        return new Product
+        {
+            Id = row.Field<int>("Id"),
+            Name = row.Field<string>("Name")!,
+            Description = row.Field<string?>("Description"),
+            Weight = row.Field<decimal?>("Weight"),
+            Height = row.Field<decimal?>("Height"),
+            Width = row.Field<decimal?>("Width"),
+            Length = row.Field<decimal?>("Length")
         };
     }
 }

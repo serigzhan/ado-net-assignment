@@ -65,8 +65,6 @@ public class OrderRepository(string connectionString) : IOrderRepository
 
     public IEnumerable<Order> GetFilteredOrders(int? month, int? year, OrderStatus? status, int? productId)
     {
-        var orders = new List<Order>();
-
         using var connection = new SqlConnection(_connectionString);
         using var command = new SqlCommand("spOrders_Filter", connection);
 
@@ -76,15 +74,11 @@ public class OrderRepository(string connectionString) : IOrderRepository
         command.Parameters.AddWithValue("@Status", status.HasValue ? status.Value.ToString() : DBNull.Value);
         command.Parameters.AddWithValue("@ProductId", (object?)productId ?? DBNull.Value);
 
-        connection.Open();
-        using var reader = command.ExecuteReader();
+        using var adapter = new SqlDataAdapter(command);
+        var dataTable = new DataTable();
+        adapter.Fill(dataTable);
 
-        while (reader.Read())
-        {
-            orders.Add(MapToOrder(reader));
-        }
-
-        return orders;
+        return dataTable.AsEnumerable().Select(MapToOrder).ToList();
     }
 
     public void DeleteOrdersBulk(int? month, int? year, OrderStatus? status, int? productId)
@@ -111,6 +105,18 @@ public class OrderRepository(string connectionString) : IOrderRepository
             CreatedDate = (DateTime)reader["CreatedDate"],
             UpdatedDate = (DateTime)reader["UpdatedDate"],
             ProductId = (int)reader["ProductId"]
+        };
+    }
+
+    private static Order MapToOrder(DataRow row)
+    {
+        return new Order
+        {
+            Id = row.Field<int>("Id"),
+            Status = Enum.Parse<OrderStatus>(row.Field<string>("Status")!),
+            CreatedDate = row.Field<DateTime>("CreatedDate"),
+            UpdatedDate = row.Field<DateTime>("UpdatedDate"),
+            ProductId = row.Field<int>("ProductId")
         };
     }
 }
